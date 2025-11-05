@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 from pathlib import Path
-
+import json 
 import pandas as pd
 from fastapi import FastAPI, Request, UploadFile, File, Form
 from fastapi.responses import HTMLResponse
@@ -44,7 +44,7 @@ async def upload(
         "phone_valid": is_valid_phone(phone),
     }
     meta_key = f"raw/{ts}-{Path(file.filename).stem}.json"
-    upload_bytes(bucket=RAW_BUCKET, blob_name=meta_key, data=str(metadata).encode("utf-8"), content_type="application/json")
+    upload_bytes(bucket=RAW_BUCKET, blob_name=meta_key, data=json.dumps(metadata).encode("utf-8"), content_type="application/json")
 
     processed_key = f"processed/{ts}-redacted-{file.filename}"
     try:
