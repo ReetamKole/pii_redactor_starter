@@ -10,7 +10,7 @@ def gcs_client():
 
 def upload_bytes(bucket: str, blob_name: str, data: bytes, content_type: str = "application/octet-stream"):
     """
-    If USE_LOCAL_STORAGE=true, write to ./local_uploads/<bucket>/<blob_name>
+    If USE_LOCAL_STORAGE=true,
     Otherwise, upload to GCS.
     """
     use_local = os.getenv("USE_LOCAL_STORAGE", "").lower() == "true"
