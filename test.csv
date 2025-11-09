@@ -1,0 +1,21 @@
+UserID,FirstName,LastName,EmailAddress,PhoneNumber,StreetAddress,City,State,ZipCode,Username,LastLogin,CreditCardNumber,SSN
+1001,James,Smith,james.smith@example.com,(202) 555-0174,123 Main St,Anytown,CA,90210,jsmith85,2025-10-28T143000Z,4.11122E+15,666-00-1111
+1002,Maria,Garcia,m.garcia@fake-email.org,(917) 555-0121,456 Oak Ave,Springfield,IL,62704,maria_g,2025-10-27T091522Z,5.55567E+15,666-00-2222
+1003,David,Johnson,d.johnson@web-mail.net,(312) 555-0199,789 Pine Ln,Riverside,CA,92501,davidj,2025-10-28T010510Z,3.70011E+14,666-00-3333
+1004,Li,Wei,li.wei@personal-server.com,(213) 555-0142,101 Maple Dr,Brooklyn,NY,11201,liwei95,2025-10-26T235005Z,4.44456E+15,666-00-4444
+1005,Emily,Brown,emily.brown@example.com,(415) 555-0188,222 Birch Rd,Houston,TX,77002,em_brown,2025-10-28T112030Z,6.01111E+15,666-00-5555
+1006,Michael,Jones,michael.j@web-mail.net,(713) 555-0155,303 Cedar Pl,Miami,FL,33101,mikej_90,2025-10-25T180011Z,4.11122E+15,666-00-6666
+1007,Sarah,Miller,s.miller@fake-email.org,(305) 555-0101,404 Elm Blvd,Chicago,IL,60601,sarahmiller,2025-10-28T074500Z,5.55567E+15,666-00-7777
+1008,Kenji,Tanaka,ktanaka@personal-server.com,(206) 555-0133,505 Spruce Way,Seattle,WA,98101,kenji_t,2025-10-27T161045Z,3.70011E+14,666-00-8888
+1009,Aisha,Khan,aisha.k@example.com,(617) 555-0167,606 Willow Ct,Boston,MA,2108,akhan93,2025-10-28T130050Z,4.44456E+15,666-00-9999
+1010,Carlos,Hernandez,carlos.h@web-mail.net,(303) 555-0112,707 Redwood St,Denver,CO,80202,c_hernandez,2025-10-24T120000Z,6.01111E+15,666-01-0000
+1011,Olivia,Davis,olivia.davis@fake-email.org,(214) 555-0148,808 Aspen Ave,Dallas,TX,75201,olivia_d,2025-10-28T101010Z,4.11122E+15,666-01-1111
+1012,Raj,Patel,raj.patel@example.com,(404) 555-0129,909 Cypress Ln,Atlanta,GA,30303,r_patel,2025-10-27T083020Z,5.55567E+15,666-01-2222
+1013,Chloe,Kim,chloe.kim@personal-server.com,(212) 555-0177,111 Pinecone Blvd,New York,NY,10001,chloe_k97,2025-10-26T201530Z,3.70011E+14,666-01-3333
+1014,Ben,Wilson,ben.wilson@web-mail.net,(702) 555-0191,222 Juniper Dr,Las Vegas,NV,89101,benw,2025-10-28T055540Z,4.44456E+15,666-01-4444
+1015,Fatima,Al-Jamil,fatima.jamil@example.com,(215) 555-0136,333 Sequoia Rd,Philadelphia,PA,19102,f_aljamil,2025-10-25T142200Z,6.01111E+15,666-01-5555
+1016,Leo,Mueller,leo.mueller@fake-email.org,(503) 555-0103,444 Chestnut Pl,Portland,OR,97201,leom,2025-10-28T124015Z,4.11122E+15,666-01-6666
+1017,Zoe,Chen,zoe.chen@personal-server.com,(602) 555-0159,555 Sycamore Way,Phoenix,AZ,85001,zoe_chen,2025-10-27T033030Z,5.55567E+15,666-01-7777
+1018,Ivan,Petrov,ivan.p@web-mail.net,(619) 555-0182,666 Poplar Ct,San Diego,CA,92101,ivan_p,2025-10-26T190000Z,3.70011E+14,666-01-8888
+1019,Megan,Lee,megan.lee@example.com,(313) 555-0114,777 Walnut St,Detroit,MI,48201,meg_lee,2025-10-28T090909Z,4.44456E+15,666-01-9999
+1020,Samuel,Wright,sam.wright@fake-email.org,(801) 555-0160,888 Redwood Blvd,Salt Lake City,UT,84101,sam_wright,2025-10-27T221212Z,6.01111E+15,666-02-0000

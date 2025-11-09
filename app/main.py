@@ -7,14 +7,17 @@ from fastapi import FastAPI, Request, UploadFile, File, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi import HTTPException
-from .storage import upload_bytes
-from .utils import redact_text, is_valid_phone
 import uuid
 import logging
 from dotenv import load_dotenv
-load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
+
+load_dotenv()
+
+from .storage import upload_bytes
+from .utils import redact_text, is_valid_phone
+
 logger = logging.getLogger("app")
 app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
@@ -48,24 +51,22 @@ async def upload(
     logger.info(f"Uploaded raw file to {RAW_BUCKET}/{raw_key}")
     
     safe_name = Path(file.filename).name
-
+    processed_key = f"processed/{ts}-{upload_id}-redacted-{safe_name}"
     metadata = {
         "upload_id": upload_id,
         "name": name,
         "email": email,
         "phone": phone,
         "filename": safe_name,
+        "filesize_bytes": len(content),
+        "filetype": file.content_type or "application/octet-stream",
         "uploaded_utc": ts,
         "phone_valid": is_valid_phone(phone),
         "raw_key": raw_key,
         "processed_key": processed_key,
     }
-    meta_key = f"raw/{ts}-{Path(file.filename).stem}.json"
     meta_key = f"raw/{upload_id}/{ts}-{Path(safe_name).stem}.json"
     upload_bytes(bucket=RAW_BUCKET, blob_name=meta_key, data=json.dumps(metadata).encode("utf-8"), content_type="application/json")
-    
-    processed_key = f"processed/{upload_id}/{ts}-redacted-{safe_name}"
-    processed_key = f"processed/{ts}-redacted-{file.filename}"
     try:
         if file.filename.lower().endswith(".csv"):
             from io import StringIO
