@@ -4,7 +4,17 @@ EMAIL_RE = re.compile(r"\b[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\b")
 
 SSN_RE = re.compile(r"\b\d{3}-\d{2}-\d{4}\b")
 
-DOB_RE = re.compile(r"\b(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])\b")
+DOB_RE = re.compile(
+    r"\b("
+        r"(19\d{2}|20\d{2})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])"         
+        r"|"
+        r"(0[1-9]|[12]\d|3[01])-(0[1-9]|1[0-2])-(19\d{2}|20\d{2})"        
+        r"|"
+        r"(0[1-9]|1[0-2])/(0[1-9]|[12]\d|3[01])/(19\d{2}|20\d{2})"         
+        r"|"
+        r"(0[1-9]|[12]\d|3[01])/(0[1-9]|1[0-2])/(19\d{2}|20\d{2})"        
+    r")\b"
+)
 
 CC_RE_FLEX = re.compile(r"\b(?:\d[ -]?){13,19}\b")
 
@@ -55,24 +65,18 @@ def is_valid_phone(phone: str) -> bool:
     """Enhanced phone validation with anomaly detection"""
     if not isinstance(phone, str):
         return False
-    
-    # Remove all non-digit characters
+   
     digits = re.sub(r"\D", "", phone)
     
-    # Basic length check
     if not (7 <= len(digits) <= 15):
         return False
-    
-    # Additional anomaly checks
-    # Check for repeated digits (like 1111111111)
+  
     if len(set(digits)) == 1:
         return False
     
-    # Check for sequential digits (like 1234567890)
     if is_sequential(digits):
         return False
-    
-    # Check for common invalid patterns
+   
     invalid_patterns = [
         '0000000000', '1111111111', '2222222222', '3333333333',
         '4444444444', '5555555555', '6666666666', '7777777777',
@@ -89,27 +93,20 @@ def is_valid_email(email: str) -> bool:
     """Enhanced email validation with anomaly detection"""
     if not isinstance(email, str):
         return False
-    
-    # Basic format check
+ 
     if not EMAIL_RE.match(email):
         return False
     
-    # Split email into local and domain parts
     try:
         local, domain = email.rsplit('@', 1)
     except ValueError:
         return False
-    
-    # Check for anomalies
-    # Local part checks
+ 
     if len(local) == 0 or len(local) > 64:
         return False
-    
-    # Domain part checks
     if len(domain) == 0 or len(domain) > 255:
         return False
     
-    # Check for suspicious patterns
     suspicious_patterns = [
         'test@test.com', 'admin@admin.com', 'user@user.com',
         'example@example.com', 'fake@fake.com', 'dummy@dummy.com'
@@ -118,11 +115,10 @@ def is_valid_email(email: str) -> bool:
     if email.lower() in suspicious_patterns:
         return False
     
-    # Check for repeated characters in local part (like aaaa@domain.com)
+    # Check for repeated characters
     if len(set(local.replace('.', '').replace('_', '').replace('-', ''))) <= 2 and len(local) > 3:
         return False
     
-    # Check for valid TLD (basic check)
     domain_parts = domain.split('.')
     if len(domain_parts) < 2:
         return False
@@ -138,11 +134,7 @@ def is_sequential(digits: str) -> bool:
     """Check if digits are in sequential order"""
     if len(digits) < 4:
         return False
-    
-    # Check ascending sequence
     ascending = all(int(digits[i]) == int(digits[i-1]) + 1 for i in range(1, len(digits)))
-    
-    # Check descending sequence
     descending = all(int(digits[i]) == int(digits[i-1]) - 1 for i in range(1, len(digits)))
     
     return ascending or descending
@@ -154,8 +146,6 @@ def detect_anomalies(name: str, email: str, phone: str) -> dict:
         "has_anomaly": False,
         "anomaly_details": []
     }
-    
-    # Check email validity
     if not is_valid_email(email):
         anomalies["has_anomaly"] = True
         anomalies["anomaly_details"].append({
@@ -163,8 +153,6 @@ def detect_anomalies(name: str, email: str, phone: str) -> dict:
             "value": email,
             "issue": "Invalid or suspicious email format"
         })
-    
-    # Check phone validity
     if not is_valid_phone(phone):
         anomalies["has_anomaly"] = True
         anomalies["anomaly_details"].append({
@@ -172,8 +160,6 @@ def detect_anomalies(name: str, email: str, phone: str) -> dict:
             "value": phone,
             "issue": "Invalid or suspicious phone format"
         })
-    
-    # Check name for suspicious patterns
     if not name or len(name.strip()) < 2:
         anomalies["has_anomaly"] = True
         anomalies["anomaly_details"].append({
@@ -181,8 +167,6 @@ def detect_anomalies(name: str, email: str, phone: str) -> dict:
             "value": name,
             "issue": "Name too short or empty"
         })
-    
-    # Check for test/dummy data patterns in name
     suspicious_names = ['test', 'admin', 'user', 'dummy', 'fake', 'example']
     if name.lower().strip() in suspicious_names:
         anomalies["has_anomaly"] = True

@@ -15,7 +15,7 @@ logging.basicConfig(level=logging.INFO)
 
 load_dotenv()
 
-from .storage import upload_bytes, init_database, save_metadata_to_db
+from .storage import upload_bytes, init_database, save_metadata_to_db, get_all_uploads_with_anomalies, get_anomaly_statistics
 from .utils import redact_text, is_valid_phone, is_valid_email, detect_anomalies
 
 logger = logging.getLogger("app")
@@ -113,3 +113,26 @@ async def upload(
         "raw_bucket": RAW_BUCKET,
         "processed_bucket": PROCESSED_BUCKET
     })
+
+@app.get("/report", response_class=HTMLResponse)
+async def anomaly_report(request: Request):
+    """Anomaly Detection Dashboard"""
+    uploads = get_all_uploads_with_anomalies(limit=100)
+    stats = get_anomaly_statistics()
+    
+    return templates.TemplateResponse("report.html", {
+        "request": request,
+        "uploads": uploads,
+        "stats": stats
+    })
+
+@app.get("/report/json")
+async def anomaly_report_json():
+    """API endpoint for anomaly data"""
+    uploads = get_all_uploads_with_anomalies(limit=100)
+    stats = get_anomaly_statistics()
+    
+    return {
+        "uploads": uploads,
+        "statistics": stats
+    }

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PII Redactor – Anomaly Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            margin-bottom: 5px;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 15px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px 8px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        tr.anomaly-row {
+            background-color: #ffe6e6;
+        }
+
+        .valid {
+            color: green;
+            font-weight: bold;
+        }
+
+        .invalid {
+            color: red;
+            font-weight: bold;
+        }
+
+        .small {
+            font-size: 12px;
+            color: #555;
+        }
+
+        .nav {
+            margin-top: 15px;
+        }
+
+        .nav a {
+            margin-right: 15px;
+            text-decoration: none;
+            color: #0066cc;
+        }
+    </style>
+</head>
+<body>
+    <h1>PII Redactor – Anomaly Report</h1>
+    <p class="small">
+        Total uploads: {{ stats.total_uploads or 0 }} |
+        Anomalies: {{ stats.total_anomalies or 0 }} |
+        Invalid emails: {{ stats.invalid_emails or 0 }} |
+        Invalid phones: {{ stats.invalid_phones or 0 }}
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Upload ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>File</th>
+                <th>Email Valid</th>
+                <th>Phone Valid</th>
+                <th>Issues</th>
+                <th>Uploaded UTC</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for upload in uploads %}
+            <tr class="{% if upload.anomaly %}anomaly-row{% endif %}">
+                <td><span class="small">{{ upload.upload_id[:8] }}...</span></td>
+                <td>{{ upload.name }}</td>
+                <td>{{ upload.email }}</td>
+                <td>{{ upload.phone }}</td>
+                <td>
+                    {{ upload.filename }}
+                    {% if upload.filesize_bytes %}
+                        <br><span class="small">{{ upload.filesize_bytes }} bytes</span>
+                    {% endif %}
+                </td>
+                <td class="{% if upload.email_valid %}valid{% else %}invalid{% endif %}">
+                    {% if upload.email_valid %}Valid{% else %}Invalid{% endif %}
+                </td>
+                <td class="{% if upload.phone_valid %}valid{% else %}invalid{% endif %}">
+                    {% if upload.phone_valid %}Valid{% else %}Invalid{% endif %}
+                </td>
+                <td>
+                    {% if upload.anomaly_details %}
+                        <ul class="small">
+                            {% for detail in upload.anomaly_details %}
+                            <li>{{ detail.field }}: {{ detail.issue }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <span class="small">No issues</span>
+                    {% endif %}
+                </td>
+                <td><span class="small">{{ upload.uploaded_utc }}</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="nav">
+        <a href="/">← Back to Upload</a>
+        <a href="/report/json">View JSON data</a>
+    </div>
+</body>
+</html>

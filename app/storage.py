@@ -5,9 +5,11 @@ import logging
 from pathlib import Path
 from google.cloud import storage
 from google.auth.exceptions import DefaultCredentialsError
-from sqlalchemy import create_engine, Column, Integer, String, Text, JSON, DateTime, func
+from sqlalchemy import create_engine, Column, Integer, String, Text, JSON, DateTime, func, desc, and_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from typing import List, Optional
+
 logger = logging.getLogger(__name__)
 def gcs_client():
     # Only used when USE_LOCAL_STORAGE is not true
@@ -55,9 +57,9 @@ class MetadataRecord(Base):
     filetype = Column(String(100))
     uploaded_utc = Column(String(20))
     phone_valid = Column(String(10))
-    email_valid = Column(String(10))  # New field
-    anomaly = Column(String(10))      # New field
-    anomaly_details = Column(JSON)    # New field
+    email_valid = Column(String(10))  
+    anomaly = Column(String(10))      
+    anomaly_details = Column(JSON)    
     raw_key = Column(Text)
     processed_key = Column(Text)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -102,9 +104,9 @@ def save_metadata_to_db(metadata: Dict[str, Any]) -> bool:
             filetype=metadata.get("filetype"),
             uploaded_utc=metadata.get("uploaded_utc"),
             phone_valid=str(metadata.get("phone_valid")),
-            email_valid=str(metadata.get("email_valid")),  # New field
-            anomaly=str(metadata.get("anomaly")),           # New field
-            anomaly_details=metadata.get("anomaly_details"), # New field
+            email_valid=str(metadata.get("email_valid")),  
+            anomaly=str(metadata.get("anomaly")),           
+            anomaly_details=metadata.get("anomaly_details"), 
             raw_key=metadata.get("raw_key"),
             processed_key=metadata.get("processed_key")
         )
@@ -117,3 +119,62 @@ def save_metadata_to_db(metadata: Dict[str, Any]) -> bool:
     except Exception as e:
         logger.error(f"Failed to save metadata to database: {e}")
         return False
+
+def get_all_uploads_with_anomalies(limit: int = 100) -> List[Dict[str, Any]]:
+    """Get all uploads with anomaly information for dashboard"""
+    if SessionLocal is None:
+        return []
+    
+    try:
+        db = SessionLocal()
+        records = db.query(MetadataRecord).order_by(desc(MetadataRecord.created_at)).limit(limit).all()
+        db.close()
+        
+        result = []
+        for record in records:
+            result.append({
+                "id": record.id,
+                "upload_id": record.upload_id,
+                "name": record.name,
+                "email": record.email,
+                "phone": record.phone,
+                "filename": record.filename,
+                "filesize_bytes": record.filesize_bytes,
+                "filetype": record.filetype,
+                "uploaded_utc": record.uploaded_utc,
+                "phone_valid": record.phone_valid == "True",
+                "email_valid": record.email_valid == "True",
+                "anomaly": record.anomaly == "True",
+                "anomaly_details": record.anomaly_details or [],
+                "created_at": record.created_at.isoformat() if record.created_at else None
+            })
+        return result
+    except Exception as e:
+        logger.error(f"Failed to get uploads with anomalies: {e}")
+        return []
+
+def get_anomaly_statistics() -> Dict[str, Any]:
+    """Get statistics about anomalies for dashboard"""
+    if SessionLocal is None:
+        return {}
+    
+    try:
+        db = SessionLocal()
+        
+        total_uploads = db.query(MetadataRecord).count()
+        total_anomalies = db.query(MetadataRecord).filter(MetadataRecord.anomaly == "True").count()
+        invalid_emails = db.query(MetadataRecord).filter(MetadataRecord.email_valid == "False").count()
+        invalid_phones = db.query(MetadataRecord).filter(MetadataRecord.phone_valid == "False").count()
+        
+        db.close()
+        
+        return {
+            "total_uploads": total_uploads,
+            "total_anomalies": total_anomalies,
+            "invalid_emails": invalid_emails,
+            "invalid_phones": invalid_phones,
+            "anomaly_rate": round((total_anomalies / total_uploads * 100) if total_uploads > 0 else 0, 2)
+        }
+    except Exception as e:
+        logger.error(f"Failed to get anomaly statistics: {e}")
+        return {}
