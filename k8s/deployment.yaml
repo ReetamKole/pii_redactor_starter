@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pii-redactor
+  namespace: pii-redactor
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pii-redactor
+  template:
+    metadata:
+      labels:
+        app: pii-redactor
+    spec:
+      containers:
+      - name: pii-redactor
+        image: gcr.io/pii-redactor-reetamkole/pii-redactor:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: GCS_RAW_BUCKET
+          value: "pii-raw-reetamk"
+        - name: GCS_PROCESSED_BUCKET
+          value: "pii-processed-reetamk"
+        - name: GCP_PROJECT_ID
+          value: "pii-redactor-reetamkole"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: database-secret
+              key: url
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 5
