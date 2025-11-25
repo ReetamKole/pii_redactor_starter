@@ -13,8 +13,23 @@ spec:
       labels:
         app: pii-redactor
     spec:
+
       containers:
-      # Your main application container
+      - name: esp
+        image: gcr.io/endpoints-release/endpoints-runtime:2
+        args:
+        - "--http_port=8081"
+        - "--backend=127.0.0.1:8080"
+      
+        - "--service=pii-redactor-api.endpoints.pii-redactor-reetamkole.cloud.goog"
+        - "--rollout_strategy=managed"
+       
+        
+        ports:
+        - containerPort: 8081
+        env:
+        - name: ESP_PROJECT_ID
+          value: "pii-redactor-reetamkole"
       - name: pii-redactor
         image: gcr.io/pii-redactor-reetamkole/pii-redactor:latest
         ports:
@@ -26,8 +41,7 @@ spec:
           value: "pii-processed-reetamk"
         - name: GCP_PROJECT_ID
           value: "pii-redactor-reetamkole"
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: "/var/secrets/google/key.json"
+      
         - name: DATABASE_URL
           valueFrom:
             secretKeyRef:
@@ -40,10 +54,6 @@ spec:
           limits:
             memory: "512Mi"
             cpu: "250m"
-        volumeMounts:
-        - name: gcp-sa-key
-          mountPath: "/var/secrets/google"
-          readOnly: true
         livenessProbe:
           httpGet:
             path: /
@@ -56,47 +66,3 @@ spec:
             port: 8080
           initialDelaySeconds: 10
           periodSeconds: 5
-      # ESP (Extensible Service Proxy) sidecar container
-      - name: esp
-        image: gcr.io/endpoints-release/endpoints-runtime:2
-        args:
-          - --http_port=8081
-          - --backend=127.0.0.1:8080
-          - --service=pii-redactor-api-dot-pii-redactor-reetamkole.appspot.com
-          - --rollout_strategy=managed
-          - --service_account_key=/var/secrets/google/key.json
-          - "--service=pii-redactor-api.endpoints.pii-redactor-reetamkole.cloud.goog"
-        ports:
-        - containerPort: 8081
-        env:
-        - name: ESP_PROJECT_ID
-          value: "pii-redactor-reetamkole"
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: "/var/secrets/google/key.json"
-        volumeMounts:
-        - name: gcp-sa-key
-          mountPath: "/var/secrets/google"
-          readOnly: true
-        resources:
-          requests:
-            memory: "128Mi"
-            cpu: "50m"
-          limits:
-            memory: "256Mi"
-            cpu: "100m"
-        readinessProbe:
-          httpGet:
-            path: /
-            port: 8081
-          initialDelaySeconds: 30
-          periodSeconds: 5
-        livenessProbe:
-          httpGet:
-            path: /
-            port: 8081
-          initialDelaySeconds: 30
-          periodSeconds: 10
-      volumes:
-      - name: gcp-sa-key
-        secret:
-          secretName: gcp-sa-key
