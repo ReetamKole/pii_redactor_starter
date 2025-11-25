@@ -1,0 +1,34 @@
+﻿swagger: '2.0'
+info:
+  title: PII Redactor API
+  description: API for PII redaction service mapped to GKE cluster
+  version: 1.0.0
+host: pii-redactor-api-dot-pii-redactor-reetamkole.appspot.com
+schemes:
+  - http
+  - https
+basePath: /
+produces:
+  - application/json
+  - text/html
+x-google-backend:
+  address: http://34.100.136.159
+  deadline: 30.0
+paths:
+  /**:
+    get:
+      summary: Catch all GET requests
+      operationId: catchAllGet
+      x-google-backend:
+        address: http://34.100.136.159
+      responses:
+        '200':
+          description: Success
+    post:
+      summary: Catch all POST requests
+      operationId: catchAllPost
+      x-google-backend:
+        address: http://34.100.136.159
+      responses:
+        '200':
+          description: Success

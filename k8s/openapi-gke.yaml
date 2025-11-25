@@ -1,0 +1,101 @@
+swagger: "2.0"
+info:
+  title: PII Redactor API
+  version: "1.0.0"
+  description: "Free PII Redactor Service"
+host: pii-redactor-api-dot-pii-redactor-reetamkole.appspot.com
+schemes:
+  - https
+produces:
+  - application/json
+  - text/html
+consumes:
+  - application/json
+  - multipart/form-data
+paths:
+  "/*":
+    get:
+      operationId: "proxy_get"
+      summary: "Proxy all GET requests"
+      parameters:
+      - name: "path"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69  # Replace with your actual IP
+        path_translation: APPEND_PATH_TO_ADDRESS
+    post:
+      operationId: "proxy_post"
+      summary: "Proxy all POST requests"
+      parameters:
+      - name: "path"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69  # Replace with your actual IP
+        path_translation: APPEND_PATH_TO_ADDRESS
+    put:
+      operationId: "proxy_put"
+      summary: "Proxy all PUT requests"
+      parameters:
+      - name: "path"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69  # Replace with your actual IP
+        path_translation: APPEND_PATH_TO_ADDRESS
+    delete:
+      operationId: "proxy_delete"
+      summary: "Proxy all DELETE requests"
+      parameters:
+      - name: "path"
+        in: "path"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69  # Replace with your actual IP
+        path_translation: APPEND_PATH_TO_ADDRESS
+  "/":
+    get:
+      operationId: "root_get"
+      summary: "Get root page"
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69  # Replace with your actual IP
+    post:
+      operationId: "root_post"
+      summary: "Post to root"
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69  # Replace with your actual IP

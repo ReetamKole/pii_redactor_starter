@@ -7,7 +7,7 @@ spec:
   selector:
     app: pii-redactor
   ports:
-  - port: 80
-    targetPort: 8080
-    protocol: TCP
+    - protocol: TCP
+      port: 80
+      targetPort: 8081  # Point to ESP port (8081) instead of app port (8080)
   type: LoadBalancer

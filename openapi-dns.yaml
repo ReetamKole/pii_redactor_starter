@@ -1,0 +1,33 @@
+﻿swagger: '2.0'
+info:
+  title: PII Redactor API
+  description: API for PII redaction service on GKE
+  version: 1.0.0
+host: pii-redactor-api.endpoints.pii-redactor-reetamkole.cloud.goog
+schemes:
+  - http
+basePath: /
+produces:
+  - application/json
+
+# --- THIS IS THE MAGIC SECTION ---
+# This automatically creates the DNS A-record for the .cloud.goog domain
+x-google-endpoints:
+  - name: "pii-redactor-api.endpoints.pii-redactor-reetamkole.cloud.goog"
+    target: "34.100.136.159"
+# -------------------------------
+
+paths:
+  /**:
+    get:
+      summary: Catch all GET requests
+      operationId: catchAllGet
+      responses:
+        '200':
+          description: Success
+    post:
+      summary: Catch all POST requests
+      operationId: catchAllPost
+      responses:
+        '200':
+          description: Success

@@ -1,0 +1,66 @@
+﻿swagger: "2.0"
+info:
+  title: PII Redactor API
+  version: "1.0.0"
+  description: "Free PII Redactor Service"
+host: pii-redactor-api-dot-pii-redactor-reetamkole.appspot.com
+schemes:
+  - https
+produces:
+  - application/json
+  - text/html
+paths:
+  "/**":
+    get:
+      operationId: proxy_get
+      summary: "Proxy GET requests"
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69
+    post:
+      operationId: proxy_post
+      summary: "Proxy POST requests"
+      consumes:
+        - multipart/form-data
+        - application/json
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69
+    put:
+      operationId: proxy_put
+      summary: "Proxy PUT requests"
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69
+    delete:
+      operationId: proxy_delete
+      summary: "Proxy DELETE requests"
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69
+    patch:
+      operationId: proxy_patch
+      summary: "Proxy PATCH requests"
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69

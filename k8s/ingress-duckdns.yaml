@@ -1,0 +1,29 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: pii-redactor-ssl-duckdns
+  namespace: pii-redactor
+spec:
+  domains:
+    - pii-redactor-reetamkole.duckdns.org
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pii-redactor-ingress-duckdns
+  namespace: pii-redactor
+  annotations:
+    networking.gke.io/managed-certificates: pii-redactor-ssl-duckdns
+    kubernetes.io/ingress.class: "gce"
+spec:
+  rules:
+  - host: pii-redactor-reetamkole.duckdns.org
+    http:
+      paths:
+      - path: /*
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: pii-redactor-service
+            port:
+              number: 80

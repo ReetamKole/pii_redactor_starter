@@ -1,0 +1,54 @@
+﻿swagger: "2.0"
+info:
+  title: PII Redactor API
+  version: "1.0.0"
+  description: "PII Redactor Service with ESP"
+host: pii-redactor-api-dot-pii-redactor-reetamkole.appspot.com
+schemes:
+  - https
+  - http
+produces:
+  - application/json
+  - text/html
+consumes:
+  - application/json
+  - multipart/form-data
+  - application/x-www-form-urlencoded
+paths:
+  "/**":
+    get:
+      operationId: "get_all"
+      summary: "Handle all GET requests"
+      responses:
+        200:
+          description: "OK"
+    post:
+      operationId: "post_all"
+      summary: "Handle all POST requests"
+      responses:
+        200:
+          description: "OK"
+    put:
+      operationId: "put_all"
+      summary: "Handle all PUT requests"
+      responses:
+        200:
+          description: "OK"
+    delete:
+      operationId: "delete_all"
+      summary: "Handle all DELETE requests"
+      responses:
+        200:
+          description: "OK"
+    patch:
+      operationId: "patch_all"
+      summary: "Handle all PATCH requests"
+      responses:
+        200:
+          description: "OK"
+    options:
+      operationId: "options_all"
+      summary: "Handle all OPTIONS requests"
+      responses:
+        200:
+          description: "OK"

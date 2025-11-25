@@ -1,0 +1,85 @@
+﻿swagger: "2.0"
+info:
+  title: PII Redactor API
+  version: "2.0.0"
+  description: "Free PII Redactor Service"
+host: pii-redactor-api-dot-pii-redactor-reetamkole.appspot.com
+schemes:
+  - https
+produces:
+  - application/json
+  - text/html
+consumes:
+  - application/json
+  - multipart/form-data
+paths:
+  "/":
+    get:
+      operationId: "root_get"
+      summary: "Get root page"
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69
+    post:
+      operationId: "root_post"
+      summary: "Post to root"
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69
+  "/upload":
+    post:
+      operationId: "upload_post"
+      summary: "Upload files"
+      consumes:
+        - multipart/form-data
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69
+        path_translation: APPEND_PATH_TO_ADDRESS
+  "/report":
+    get:
+      operationId: "report_get"
+      summary: "View report"
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69
+        path_translation: APPEND_PATH_TO_ADDRESS
+  "/*":
+    get:
+      operationId: "catch_all_get"
+      summary: "Catch all GET requests"
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69
+        path_translation: APPEND_PATH_TO_ADDRESS
+    post:
+      operationId: "catch_all_post"
+      summary: "Catch all POST requests"
+      responses:
+        200:
+          description: "Successful response"
+        default:
+          description: "Error response"
+      x-google-backend:
+        address: http://34.14.191.69
+        path_translation: APPEND_PATH_TO_ADDRESS

@@ -1,0 +1,16 @@
+﻿runtime: custom
+env: flex
+service: pii-redactor-api
+
+automatic_scaling:
+  min_num_instances: 1
+  max_num_instances: 2
+
+env_variables:
+  GCS_RAW_BUCKET: "pii-raw-reetamk"
+  GCS_PROCESSED_BUCKET: "pii-processed-reetamk"
+  GCP_PROJECT_ID: "pii-redactor-reetamkole"
+
+resources:
+  cpu: 1
+  memory_gb: 1
